@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -67,7 +67,7 @@
             display: block;
             margin-bottom: 6px;
         }
-        input[type="text"], input[type="tel"], textarea, input[type="file"] {
+        input[type="text"], input[type="tel"], textarea {
             width: 100%;
             padding: 10px;
             margin-bottom: 16px;
@@ -155,9 +155,6 @@
         <label for="titleInput">Title:</label>
         <input type="text" id="titleInput" placeholder="Enter title" required>
 
-        <label for="imgInput">Profile / Post Photo:</label>
-        <input type="file" id="imgInput" accept="image/*" required>
-
         <label for="captionInput">Caption / Bio:</label>
         <textarea id="captionInput" placeholder="Enter caption or bio" rows="3" required></textarea>
 
@@ -186,37 +183,17 @@
     <script>
         const supabaseUrl = 'https://shxakgjkzxvlihimbqer.supabase.co';
         const supabaseKey = 'sb_publishable_Uq9Wr_SX4kiOw2CjN8J8Vsg_eftaSziK';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function createPost() {
             const title = document.getElementById('titleInput').value;
-            const fileInput = document.getElementById('imgInput');
             const caption = document.getElementById('captionInput').value;
             const phone = document.getElementById('phoneInput').value;
-            const file = fileInput.files[0];
-
-            if (!file) {
-                alert("Please select a photo to upload.");
-                return;
-            }
 
             try {
-                const fileName = `${Date.now()}_${file.name}`;
-                const { error: storageError } = await supabase.storage
-                    .from('uploads')
-                    .upload(fileName, file);
-
-                if (storageError) throw storageError;
-
-                const { data: urlData } = supabase.storage
-                    .from('uploads')
-                    .getPublicUrl(fileName);
-
-                const imageUrl = urlData.publicUrl;
-
-                const { error: dbError } = await supabase
+                const { error: dbError } = await supabaseClient
                     .from('posts')
-                    .insert([{ title, image_url: imageUrl, caption, phone }]);
+                    .insert([{ title, caption, phone }]);
 
                 if (dbError) throw dbError;
 
