@@ -1,156 +1,234 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trust Helpers</title>
+    <title>Trusty Helpers</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #fff0f5;
-            margin: 0;
-            padding: 0;
+            background-color: #fdf5f6;
+            font-family: Arial, sans-serif;
             display: flex;
-            justify-content: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background-color: #ffffff;
-            min-height: 100vh;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            align-items: center;
             padding: 20px;
+            margin: 0;
+        }
+
+        /* Banner styling */
+        .welcome-header {
+            background: linear-gradient(135deg, #d81b60, #ad1457);
+            color: #ffffff;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px 15px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(216, 27, 96, 0.25);
+            margin-bottom: 25px;
             box-sizing: border-box;
+        }
+        .welcome-header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .welcome-header p {
+            margin: 6px 0 0 0;
+            font-size: 14px;
+            opacity: 0.92;
+        }
+
+        /* Form container */
+        form {
+            background-color: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 440px;
+            border: 1px solid #f8bbd0;
+            box-sizing: border-box;
+        }
+        h2 {
+            color: #d81b60;
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 20px;
             text-align: center;
         }
-        header {
-            background-color: #ffb6c1;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        label {
+            color: #c2185b;
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+            margin-bottom: 6px;
         }
-        h1 {
-            color: #d11a5e;
-            margin: 0;
-            font-size: 24px;
-        }
-        .post-form {
-            border: 1px solid #ffb6c1;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: left;
-            background-color: #fff9fa;
-        }
-        .post-form input, .post-form textarea {
+        input[type="text"], input[type="tel"], textarea, input[type="file"] {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            margin-bottom: 16px;
+            border: 1px solid #ffccbc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            background-color: #d81b60;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        button[type="submit"]:hover {
+            background-color: #c2185b;
+        }
+
+        /* Developer contact section */
+        .developer-section {
+            margin-top: 25px;
+            text-align: center;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #f8bbd0;
             box-sizing: border-box;
         }
-        .post-form button {
-            width: 100%;
-            background-color: #d11a5e;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .developer-section p {
+            color: #880e4f;
             font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 14px;
         }
-        .helper-card {
-            border: 2px solid #ffb6c1;
-            border-radius: 15px;
-            padding: 15px;
-            margin-bottom: 20px;
-            background-color: #ffffff;
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
-        .helper-img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: none;
+        .contact-btn {
+            display: block;
+            padding: 10px 14px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: opacity 0.2s;
         }
-        .caption {
-            color: #333;
-            font-size: 16px;
-            line-height: 1.5;
-            margin-bottom: 15px;
+        .contact-btn:hover {
+            opacity: 0.9;
         }
         .whatsapp-btn {
-            display: none;
-            background-color: #25d366;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 16px;
-            width: 100%;
-            box-sizing: border-box;
+            background-color: #25D366;
+        }
+        .phone-btn {
+            background-color: #d81b60;
+        }
+        .email-btn {
+            background-color: #0288d1;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Welcome to Trust Helpers</h1>
-        </header>
 
-        <div class="post-form">
-            <h3>Add New Worker</h3>
-            <input type="text" id="titleInput" placeholder="Worker's Name / Title">
-            <input type="text" id="imgInput" placeholder="Image URL">
-            <textarea id="captionInput" placeholder="Write caption or bio here..." rows="3"></textarea>
-            <input type="text" id="phoneInput" placeholder="WhatsApp Phone Number (e.g., 260970000000)">
-            <button onclick="createPost()">Publish Profile</button>
-        </div>
+    <!-- Welcome Header Banner -->
+    <div class="welcome-header">
+        <h1>Welcome to Trusty Helpers</h1>
+        <p>Connecting you with reliable, trusted service providers</p>
+    </div>
 
-        <div id="feed">
-            <!-- Dynamically created helper cards will appear here -->
+    <!-- Post Creation Form -->
+    <form id="postForm" onsubmit="event.preventDefault(); createPost();">
+        <h2>Create a Post</h2>
+
+        <label for="titleInput">Title:</label>
+        <input type="text" id="titleInput" placeholder="Enter title" required>
+
+        <label for="imgInput">Profile / Post Photo:</label>
+        <input type="file" id="imgInput" accept="image/*" required>
+
+        <label for="captionInput">Caption / Bio:</label>
+        <textarea id="captionInput" placeholder="Enter caption or bio" rows="3" required></textarea>
+
+        <label for="phoneInput">Phone Number:</label>
+        <input type="tel" id="phoneInput" placeholder="Enter phone number" required>
+
+        <button type="submit">Submit Post</button>
+    </form>
+
+    <!-- Developer Contact Section -->
+    <div class="developer-section">
+        <p>Need help or want to contact the developer?</p>
+        <div class="contact-links">
+            <a href="https://wa.me/2609763341084" class="contact-btn whatsapp-btn" target="_blank">
+                Contact Developer on WhatsApp
+            </a>
+            <a href="tel:+2607777867404" class="contact-btn phone-btn">
+                Call Developer: +260 777 786 7404
+            </a>
+            <a href="mailto:mulungwechipasha@gmail.com" class="contact-btn email-btn">
+                Email Developer
+            </a>
         </div>
     </div>
 
     <script>
-        function createPost() {
+        const supabaseUrl = 'https://shxakgjkzxvlihimbqer.supabase.co';
+        const supabaseKey = 'sb_publishable_Uq9Wr_SX4kiOw2CjN8J8Vsg_eftaSziK';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function createPost() {
             const title = document.getElementById('titleInput').value;
-            const imgUrl = document.getElementById('imgInput').value;
+            const fileInput = document.getElementById('imgInput');
             const caption = document.getElementById('captionInput').value;
             const phone = document.getElementById('phoneInput').value;
+            const file = fileInput.files[0];
 
-            if (!title || !caption || !phone) {
-                alert("Please fill in the title, caption, and phone number.");
+            if (!file) {
+                alert("Please select a photo to upload.");
                 return;
             }
 
-            const feed = document.getElementById('feed');
-            
-            const card = document.createElement('div');
-            card.className = 'helper-card';
+            try {
+                const fileName = `${Date.now()}_${file.name}`;
+                const { error: storageError } = await supabase.storage
+                    .from('uploads')
+                    .upload(fileName, file);
 
-            let imgHtml = '';
-            if (imgUrl) {
-                imgHtml = `<img src="${imgUrl}" alt="Trust Worker" class="helper-img" style="display: block;">`;
+                if (storageError) throw storageError;
+
+                const { data: urlData } = supabase.storage
+                    .from('uploads')
+                    .getPublicUrl(fileName);
+
+                const imageUrl = urlData.publicUrl;
+
+                const { error: dbError } = await supabase
+                    .from('posts')
+                    .insert([{ title, image_url: imageUrl, caption, phone }]);
+
+                if (dbError) throw dbError;
+
+                alert("Post created successfully!");
+                document.getElementById('postForm').reset();
+
+            } catch (err) {
+                console.error("Error:", err);
+                alert("An error occurred: " + err.message);
             }
-
-            card.innerHTML = `
-                ${imgHtml}
-                <h3>${title}</h3>
-                <p class="caption">${caption}</p>
-                <a href="https://wa.me/${phone}" class="whatsapp-btn" style="display: inline-block;">Message on WhatsApp</a>
-            `;
-
-            feed.prepend(card);
-
-            // Clear inputs
-            document.getElementById('titleInput').value = '';
-            document.getElementById('imgInput').value = '';
-            document.getElementById('captionInput').value = '';
-            document.getElementById('phoneInput').value = '';
         }
     </script>
+
 </body>
-</html>    
+</html>
