@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust Helpers</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff0f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        header {
+            background-color: #ffb6c1;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #d11a5e;
+            margin: 0;
+            font-size: 24px;
+        }
+        .post-form {
+            border: 1px solid #ffb6c1;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+            background-color: #fff9fa;
+        }
+        .post-form input, .post-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .post-form button {
+            width: 100%;
+            background-color: #d11a5e;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .helper-card {
+            border: 2px solid #ffb6c1;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #ffffff;
+        }
+        .helper-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .caption {
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        .whatsapp-btn {
+            display: none;
+            background-color: #25d366;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Welcome to Trust Helpers</h1>
+        </header>
+
+        <div class="post-form">
+            <h3>Add New Worker</h3>
+            <input type="text" id="titleInput" placeholder="Worker's Name / Title">
+            <input type="text" id="imgInput" placeholder="Image URL">
+            <textarea id="captionInput" placeholder="Write caption or bio here..." rows="3"></textarea>
+            <input type="text" id="phoneInput" placeholder="WhatsApp Phone Number (e.g., 260970000000)">
+            <button onclick="createPost()">Publish Profile</button>
+        </div>
+
+        <div id="feed">
+            <!-- Dynamically created helper cards will appear here -->
+        </div>
+    </div>
+
+    <script>
+        function createPost() {
+            const title = document.getElementById('titleInput').value;
+            const imgUrl = document.getElementById('imgInput').value;
+            const caption = document.getElementById('captionInput').value;
+            const phone = document.getElementById('phoneInput').value;
+
+            if (!title || !caption || !phone) {
+                alert("Please fill in the title, caption, and phone number.");
+                return;
+            }
+
+            const feed = document.getElementById('feed');
+            
+            const card = document.createElement('div');
+            card.className = 'helper-card';
+
+            let imgHtml = '';
+            if (imgUrl) {
+                imgHtml = `<img src="${imgUrl}" alt="Trust Worker" class="helper-img" style="display: block;">`;
+            }
+
+            card.innerHTML = `
+                ${imgHtml}
+                <h3>${title}</h3>
+                <p class="caption">${caption}</p>
+                <a href="https://wa.me/${phone}" class="whatsapp-btn" style="display: inline-block;">Message on WhatsApp</a>
+            `;
+
+            feed.prepend(card);
+
+            // Clear inputs
+            document.getElementById('titleInput').value = '';
+            document.getElementById('imgInput').value = '';
+            document.getElementById('captionInput').value = '';
+            document.getElementById('phoneInput').value = '';
+        }
+    </script>
+</body>
+</html>    
